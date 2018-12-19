@@ -142,7 +142,7 @@ class TitleSerializer(serializers.ModelSerializer):
 		many=True,
 		write_only=True,
 		queryset=Writer.objects.all(),
-		source='director_lookup'
+		source='writer_lookup'
 	)
 
 	class Meta:
@@ -185,18 +185,18 @@ class TitleSerializer(serializers.ModelSerializer):
 					a_title_id=title.title_id
 				)
 
-		return title
+		# return title
 
-		if director is not None:
+		if directors is not None:
 			for director in directors:
 				DirectorLookup.objects.create(
 					director_id=director.director_id,
 					d_title_id=title.title_id
 				)
 
-		return title
+		# return title
 
-		if writer is not None:
+		if writers is not None:
 			for writer in writers:
 				WriterLookup.objects.create(
 					writer_id=writer.writer_id,
@@ -263,7 +263,7 @@ class TitleSerializer(serializers.ModelSerializer):
 		new_ids_a = []#
 		old_ids_a = ActorLookup.objects \
 			.values_list('actor_id', flat=True) \
-			.filter(title_id__exact=title_id)
+			.filter(a_title_id__exact=title_id)
 
 		# TODO Insert may not be required (Just return instance)
 
@@ -275,7 +275,7 @@ class TitleSerializer(serializers.ModelSerializer):
 				continue
 			else:#
 				ActorLookup.objects \
-					.create(title_id=title_id, actor_id=new_id_a)#
+					.create(a_title_id=title_id, actor_id=new_id_a)#
 
 		# Delete old unmatched country entries
 		for old_id_a in old_ids_a:
@@ -283,13 +283,13 @@ class TitleSerializer(serializers.ModelSerializer):
 				continue
 			else:#
 				ActorLookup.objects \
-					.filter(title_id=title_id, actor_id=new_id_a) \
+					.filter(a_title_id=title_id, actor_id=new_id_a) \
 					.delete()
 
 		new_ids_d = []#
 		old_ids_d = DirectorLookup.objects \
 			.values_list('director_id', flat=True) \
-			.filter(title_id__exact=title_id)
+			.filter(d_title_id__exact=title_id)
 
 		# TODO Insert may not be required (Just return instance)
 
@@ -301,7 +301,7 @@ class TitleSerializer(serializers.ModelSerializer):
 				continue
 			else:#
 				DirectorLookup.objects \
-					.create(title_id=title_id, director_id=new_id_d)#
+					.create(d_title_id=title_id, director_id=new_id_d)#
 
 		# Delete old unmatched country entries
 		for old_id_d in old_ids_d:
@@ -309,13 +309,13 @@ class TitleSerializer(serializers.ModelSerializer):
 				continue
 			else:#
 				DirectorLookup.objects \
-					.filter(title_id=title_id, director_id=new_id_d) \
+					.filter(d_title_id=title_id, director_id=new_id_d) \
 					.delete()
 
 		new_ids_w = []#
 		old_ids_w = WriterLookup.objects \
 			.values_list('writer_id', flat=True) \
-			.filter(title_id__exact=title_id)
+			.filter(w_title_id__exact=title_id)
 
 		# TODO Insert may not be required (Just return instance)
 
@@ -327,7 +327,7 @@ class TitleSerializer(serializers.ModelSerializer):
 				continue
 			else:#
 				WriterLookup.objects \
-					.create(title_id=title_id, writer_id=new_id_w)#
+					.create(w_title_id=title_id, writer_id=new_id_w)#
 
 		# Delete old unmatched country entries
 		for old_id_w in old_ids_w:
@@ -335,7 +335,7 @@ class TitleSerializer(serializers.ModelSerializer):
 				continue
 			else:#
 				WriterLookup.objects \
-					.filter(title_id=title_id, writer_id=new_id_w) \
+					.filter(w_title_id=title_id, writer_id=new_id_w) \
 					.delete()
 
 		return instance
